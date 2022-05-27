@@ -15,7 +15,7 @@ const registerUser = async function (req, res) {
 
 //==validating first name==//
     if (!isValid(fname)) return res.status(400).send({ status: false, msg: "Name is a mandatory field" })
-    
+
     if (!isValidName(fname)) return res.status(400).send({ status: false, msg: "Name must contain only alphabates" })
 
 //==validating last name==//
@@ -65,7 +65,6 @@ const registerUser = async function (req, res) {
 //==creating user==//    
     const userData = { fname,lname,email,profileImage,phone,password,address };
     const saveUser = await userModel.create( userData)
-//let data ={saveUser.address,_id,fname,lname,email,profileImage,phone,password,createdAt,updatedAt };
     return res.status(201).send({ status: true, message: "User profile details", data: saveUser })
     }catch (err) {
         return res.status(500).send({ status: false, error: err.message })
@@ -201,6 +200,7 @@ const getProfileData = async function (req, res) {
         }
 
     //==checking and validating address==//
+
         if (!isValid(address)) { return res.status(400).send({ status: false, message: " address is not valid" }) }
         else if (address) {
             let address1= JSON.parse(address) 

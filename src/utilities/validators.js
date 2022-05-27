@@ -52,8 +52,48 @@ let isValidName=function(name){
     }
 //*******************************************************************//
 
+//==Price Validation
+let isValidPrice=function(price){
+    let priceRegex=/^(\d+(\.\d+)?)$/;
+    return priceRegex.test(price);
+    }
+//^\d+(?:\.\d{1,4})?$/
+//*******************************************************************//
+
+//==Enum Validation
+let isValidEnum= function(value){
+    let availableSizes=["S", "XS","M","X", "L","XXL", "XL"];
+ // return  enums.indexOf(value)!== -1;
+ return  availableSizes.includes(value)
+}
+//*******************************************************************//
+
+//==Enum Validation
+const isValidNum = (number) => {
+    if (/^\d+$/.test(number)) {
+      return true
+    } else {
+      return false;
+    };
+  };
+//*******************************************************************//
+
+
+
+
+// const isValidArray = function (object){
+//     if (typeof (object) === "object") {
+//         object = object.filter(x => x.trim())
+//         if (object.length == 0) {
+//             return false;
+//         }
+//         else {return true;}
+//         }
+//       }
+
 
 //*******************************************************************//
-    module.exports = { isValidRequestBody, isValid, isValidObjectId, isValidEmail, isValidMobile, isValidName, isValidPassword }
+
+    module.exports = { isValidRequestBody,isValidNum, isValid, isValidObjectId, isValidEmail, isValidMobile, isValidName, isValidPassword,isValidPrice,isValidEnum }
 
 //*****************************************************************//
