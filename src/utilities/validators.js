@@ -68,7 +68,7 @@ let isValidEnum= function(value){
 }
 //*******************************************************************//
 
-//==Enum Validation
+//==Number Validation
 const isValidNum = (number) => {
     if (/^\d+$/.test(number)) {
       return true

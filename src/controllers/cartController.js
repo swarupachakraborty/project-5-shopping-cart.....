@@ -226,6 +226,7 @@ if(presentCart.items[index].quantity!==0){
     presentCart.totalItems -= 1
     data.totalItems = presentCart.totalItems
 
+  //==updating cart==//
     let removeItem = await cartModel.findOneAndUpdate(
       {_id : cartId},
       {
@@ -237,6 +238,9 @@ if(presentCart.items[index].quantity!==0){
     }
   }
 }
+
+
+
 
 //*******************************************************************//
 
