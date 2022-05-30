@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
 const aws = require("../utilities/aws")
 const bcrypt = require('bcrypt')
-const { isValidRequestBody, isValid,isValidName, isValidMobile, isValidEmail, isValidPassword,isValidObjectId } = require("../utilities/validators");
+const { isValidRequestBody, isValid,isValidName, isValidMobile, isValidEmail, isValidPassword,isValidObjectId, isValidFile } = require("../utilities/validators");
 
 
 //---REGISTER USER
@@ -15,7 +15,6 @@ const registerUser = async function (req, res) {
 
 //==validating first name==//
     if (!isValid(fname)) return res.status(400).send({ status: false, msg: "Name is a mandatory field" })
-
     if (!isValidName(fname)) return res.status(400).send({ status: false, msg: "Name must contain only alphabates" })
 
 //==validating last name==//
@@ -52,9 +51,10 @@ const registerUser = async function (req, res) {
     const salt = await bcrypt.genSalt(10);
     password = await bcrypt.hash(password, salt)
 
-//==getting profile image url==//
+//==validating and uploading image (getting profile image url)==//
     let files= req.files
     if(files && files.length>0){
+         if(!isValidFile(files[0].originalname))  return res.status(400).send({ status: false, message: "Please provide image only" })
         let uploadedFileURL= await aws.uploadFile( files[0] )
         profileImage = uploadedFileURL
     }
@@ -107,7 +107,7 @@ let token = jwt.sign(
     {
         userId:  user._id.toString(),
         iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60
+        exp: Math.floor(Date.now() / 1000) + 96 * 60 * 60 //4days
     },
     "Group 24 project"
 );
@@ -200,7 +200,6 @@ const getProfileData = async function (req, res) {
         }
 
     //==checking and validating address==//
-
         if (!isValid(address)) { return res.status(400).send({ status: false, message: " address is not valid" }) }
         else if (address) {
             let address1= JSON.parse(address) 
@@ -244,6 +243,12 @@ const getProfileData = async function (req, res) {
         }
 
     
+    //==checking and validating file(image)==//
+        if (formData == "") { return res.status(400).send({ status: false, message: "image is not valid" }) }
+        else if (formData) {
+            if(!isValidFile(formData[0].originalname))  return res.status(400).send({ status: false, message: "Please provide image only" })
+        }
+
     //==updating user details==//    
          const updateDetails = await userModel.findByIdAndUpdate({ _id: userId }, updateData, { new: true })
         return res.status(200).send({ status: true, message: "User profile updated successfully", data: updateDetails })

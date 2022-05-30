@@ -78,22 +78,14 @@ const isValidNum = (number) => {
   };
 //*******************************************************************//
 
-
-
-
-// const isValidArray = function (object){
-//     if (typeof (object) === "object") {
-//         object = object.filter(x => x.trim())
-//         if (object.length == 0) {
-//             return false;
-//         }
-//         else {return true;}
-//         }
-//       }
-
+//==File Validation
+const isValidFile = function(files){
+    let imageRegex = /.*\.(jpeg|jpg|png)$/;
+    return imageRegex.test(files)
+}
 
 //*******************************************************************//
 
-    module.exports = { isValidRequestBody,isValidNum, isValid, isValidObjectId, isValidEmail, isValidMobile, isValidName, isValidPassword,isValidPrice,isValidEnum }
+    module.exports = { isValidRequestBody,isValidNum,isValidFile, isValid, isValidObjectId, isValidEmail, isValidMobile, isValidName, isValidPassword,isValidPrice,isValidEnum }
 
 //*****************************************************************//
