@@ -6,8 +6,7 @@ const userModel = require("../models/userModel")
 let authentication = function (req, res, next) {
     try {
         let token = req.header('Authorization','Bearer Token')
-   // console.log(token)
-   //console.log(token.split(" "))
+  
         if (!token) return res.status(400).send({ status: false, message: "Token is required" })
     
         let decodedToken = jwt.verify(token.split(" ")[1], "Group 24 project",(err, decoded) => {    
@@ -35,8 +34,7 @@ const authorization = async function (req, res, next) {
         const findUser= await userModel.findOne({_id:user});
         if (!findUser) return res.status(404).send({ status: false, message: 'User not found' })
         const {_id} = findUser;
-//console.log(tokenId)
-//console.log(_id)
+
         if(tokenId.toString()!==_id.toString()) return res.status(403).send({ status: false, message: "Unauthorized, cannot access other's data." })
         next()
     }catch (error) {
