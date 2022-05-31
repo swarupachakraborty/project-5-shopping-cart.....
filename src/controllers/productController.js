@@ -71,7 +71,7 @@ const getProduct = async function (req, res){
         const query = req.query
     //==No filter: sorting title and sending product list==//
     if(!query){
-        let GetRecod = await productModel.find({ isDeleted: false }).sort({ title: 1 })
+        let GetRecod = await productModel.find({ isDeleted: false })
         if (GetRecod.length == 0) return res.status(404).send({ status: false, message: "product not found" }) 
 
         if (Object.keys(query).length === 0) return res.status(200).send({ status: true, message: 'Products list', data: GetRecod })}

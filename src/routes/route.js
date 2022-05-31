@@ -41,7 +41,7 @@ router.delete('/products/:productId', deleteProduct)
 
 //---CART APIS---//
 //==Create Cart/Add Product to Cart 
-router.post('/users/:userId/cart',createCart)
+router.post('/users/:userId/cart',authentication,authorization,createCart)
 
 //==Remove Product from Cart
 router.put('/users/:userId/cart',removeProduct)
@@ -49,3 +49,5 @@ router.put('/users/:userId/cart',removeProduct)
 //*******************************************************************//
 
 module.exports = router  
+
+//*******************************************************************//
