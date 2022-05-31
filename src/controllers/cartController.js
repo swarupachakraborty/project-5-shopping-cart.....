@@ -68,7 +68,7 @@ const createCart = async function(req, res){
         {_id : presentCart._id},
         {
         userId : data.userId,
-        $addToSet : {items: data.items},//adding new product not replacing.
+        $addToSet : {items: data.items},
         totalPrice : data.totalPrice,
         totalItems : data.totalItems
         },
@@ -88,7 +88,7 @@ const createCart = async function(req, res){
           {_id : presentCart._id},
           {
           userId : data.userId,
-          $set : {items: data.items}, //replacing with updated array
+          $set : {items: data.items}, 
           totalPrice : data.totalPrice,
           totalItems : data.totalItems
           },
