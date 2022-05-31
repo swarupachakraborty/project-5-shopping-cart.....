@@ -236,14 +236,56 @@ if(presentCart.items[index].quantity!==0){
   }
 }
 
+//*******************************************************************//
+const getCart = async function (req, res) {
+  try {
+      const userId = req.params.userId
+      if (!isValidObjectId(userId)) return res.status(400).send({ status: false, message: "UserId is invalid" })
 
+      const getUser = await userModel.findOne({_id : userId })
+      if (!getUser) return res.status(404).send({ status: false, message: "User not found" })
+      
+      const getData = await cartModel.findOne({ userId: userId  })
+      //.populate("items.productId")
+      if (!getData) return res.status(404).send({ status: false, message: "Cart not found" })
+
+      return res.status(200).send({ status: true, message: "cart details", data: getData })
+  }
+  catch (error) {
+      return res.status(500).send({ status: false, message: error.message })
+  }
+}
+
+//*******************************************************************//
+
+const deleteCart = async function (req, res) {
+  try {
+      let userId = req.params.userId
+
+      if (!isValidObjectId(userId)) return res.status(400).send({ status: false, message: "invalid user Id.." })
+
+      const userExist = await userModel.findById({_id: userId})
+      if(! userExist) return res.status(404).send({ status: false, message: "user not found.." })
+
+      const isCartExist = await cartModel.findOne({ userId: userId })
+      if (!isCartExist) return res.status(404).send({ status: false, message: "cart does not exist..." })
+
+      const cartDeleted = await cartModel.findOneAndUpdate({ _id: isCartExist._id }, { items: [], totalPrice: 0, totalItems: 0 }, { new: true })
+      return res.status(204).send({ status: true, message: "your cart is empty..continue shopping", data: cartDeleted })
+  }
+  catch (err) {
+      return res.status(500).send({ status: false, error: err.message })
+  }
+}
 
 
 //*******************************************************************//
 
-module.exports = {createCart,removeProduct}
+module.exports = {createCart,removeProduct,getCart,deleteCart}
 
 //*******************************************************************//
+
+
 
 
 

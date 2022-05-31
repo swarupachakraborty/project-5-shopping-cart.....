@@ -69,7 +69,7 @@ const createProduct = async (req, res) => {
 const getProduct = async function (req, res){
   try {
         const query = req.query
-    //==No filter: sorting title and sending product list==//
+    //==No filter:sending product list==//
     if(!query){
         let GetRecod = await productModel.find({ isDeleted: false })
         if (GetRecod.length == 0) return res.status(404).send({ status: false, message: "product not found" }) 
