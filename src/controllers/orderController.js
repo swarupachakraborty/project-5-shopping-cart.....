@@ -25,9 +25,7 @@ const createOrder = async function (req, res) {
 
         cart.totalQuantity = cart.items.map(x => x.quantity).reduce((x, y) => x + y)
         cart.cancellable = cancellable
-        console.log("hello")
         const orderCreated = await orderModel.create(cart)
-        console.log("hello1")
         res.status(201).send({ status: true, message: "order created successfully", data: orderCreated })
 
         await cartModel.findOneAndUpdate({ userId: userId }, { $set: { items: [], totalItems: 0, totalPrice: 0 } }, { new: true })
