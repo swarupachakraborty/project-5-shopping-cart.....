@@ -86,6 +86,12 @@ const isValidFile = function(files){
 
 //*******************************************************************//
 
-    module.exports = { isValidRequestBody,isValidNum,isValidFile, isValid, isValidObjectId, isValidEmail, isValidMobile, isValidName, isValidPassword,isValidPrice,isValidEnum }
+const isValidStatus = (status) => {
+    let correctStatus = ['pending', 'completed', 'cancled']
+    return (correctStatus.includes(status))
+  }
+  
+
+    module.exports = { isValidStatus, isValidRequestBody,isValidNum,isValidFile, isValid, isValidObjectId, isValidEmail, isValidMobile, isValidName, isValidPassword,isValidPrice,isValidEnum }
 
 //*****************************************************************//

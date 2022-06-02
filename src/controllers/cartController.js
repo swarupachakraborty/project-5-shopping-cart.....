@@ -41,6 +41,7 @@ const createCart = async function(req, res){
   
     if(presentCart!== null){
   //==if cart present updating it:
+
     //==calculating total price and total items==//
       presentCart.totalPrice += (productPrice*quantity)
       data.totalPrice = presentCart.totalPrice
@@ -51,10 +52,13 @@ const createCart = async function(req, res){
       let number = 0
       for(let i = 0; i<presentCart.items.length;i++){
         if(presentCart.items[i].productId == productId){
+         
           index = i
+          console.log("hii",i);
           product = presentCart.items[i].productId.toString()
           number = presentCart.items[i].quantity
         } else{
+          console.log(i,"Hello");
           newData.push(presentCart.items[i])
         }
       }

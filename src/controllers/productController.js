@@ -178,7 +178,7 @@ const updateProductDetails = async function (req, res) {
     //==validating & uploading image if given==//
         if (image && image.length > 0) {
             if(!isValidFile(image[0].originalname))  return res.status(400).send({ status: false, message: "Please provide image only" })
-            let updateProductImage = await uploadFile(image[0])
+            let updateProductImage = await aws.uploadFile(image[0])
             updateData.productImage = updateProductImage
         }
 

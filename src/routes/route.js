@@ -53,7 +53,12 @@ router.get('/users/:userId/cart',getCart)
 router.delete('/users/:userId/cart',deleteCart)
 
 //*******************************************************************//
+const { createOrder, updateOrder} = require('../controllers/orderController')
 
+router.post('/users/:userId/orders', createOrder)
+router.put('/users/:userId/orders', updateOrder)
+
+//**********************************************************************
 module.exports = router  
 
 //*******************************************************************//
