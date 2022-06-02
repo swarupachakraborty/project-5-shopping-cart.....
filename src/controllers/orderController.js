@@ -21,11 +21,12 @@ const createOrder = async function (req, res) {
         if (!cart) return res.status(404).send({ status: false, message: "cart not found to place an order.." })
         if (cart.items.length == 0) return res.status(404).send({ status: false, message: "Cart is empty... First add Product to Cart." })
 
-        
-
         cart.totalQuantity = cart.items.map(x => x.quantity).reduce((x, y) => x + y)
         const orderCreated = await orderModel.create(cart)
-        res.status(201).send({ status: true, message: "order created successfully", data: orderCreated })
+        let order =JSON.parse(JSON.stringify(orderCreated))
+        delete order.isDeleted
+        delete order.__v
+        res.status(201).send({ status: true, message: "order created successfully", data: order })
 
         await cartModel.findOneAndUpdate({ userId: userId }, { $set: { items: [], totalItems: 0, totalPrice: 0 } }, { new: true })
 
