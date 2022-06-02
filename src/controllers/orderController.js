@@ -2,7 +2,7 @@ const orderModel = require("../models/orderModel")
 const cartModel = require('../models/cartModel')
 const productModel = require('../models/productModel')
 const userModel = require('../models/userModel')
-const { isValidObjectId, isValidStatus } = require('../utilities/validators')
+const { isValidObjectId, isValidStatus, isValid } = require('../utilities/validators')
 
 
 //***************************************************************CREATE ORDER****************************************************************************************
@@ -10,21 +10,20 @@ const { isValidObjectId, isValidStatus } = require('../utilities/validators')
 const createOrder = async function (req, res) {
     try {
         const userId = req.params.userId
-        const { cancellable } = req.body
+        const { cartId } = req.body
 
         if (!isValidObjectId(userId)) return res.status(400).send({ status: false, message: "invalid user Id.." })
-        const user = await userModel.findOne({ userId: userId })
+        const user = await userModel.findOne({ _id: userId })
         if (!user) return res.status(404).send({ status: false, message: "user not found" })
-
-        const cart = await cartModel.findOne({ userId: userId }).lean().select({ updatedAt: 0, createdAt: 0, __v: 0, _id: 0 })
+        if (!isValid(cartId)) return res.status(400).send({ status: false, message: "cart Id required" })
+        if (!isValidObjectId(cartId)) return res.status(400).send({ status: false, message: "invalid cart Id.." })
+        const cart = await cartModel.findOne({ _id: cartId }).lean().select({ updatedAt: 0, createdAt: 0, __v: 0, _id: 0 })
         if (!cart) return res.status(404).send({ status: false, message: "cart not found to place an order.." })
         if (cart.items.length == 0) return res.status(404).send({ status: false, message: "Cart is empty... First add Product to Cart." })
 
-        if (!cancellable) return res.status(400).send({ status: false, message: "Provide cancellable Field" })
-        if (typeof cancellable != "boolean") return res.status(400).send({ status: false, message: "cancellable should be true or false only" })
+        
 
         cart.totalQuantity = cart.items.map(x => x.quantity).reduce((x, y) => x + y)
-        cart.cancellable = cancellable
         const orderCreated = await orderModel.create(cart)
         res.status(201).send({ status: true, message: "order created successfully", data: orderCreated })
 
