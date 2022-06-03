@@ -28,12 +28,22 @@ const createOrder = async function (req, res) {
         if (cart.items.length == 0) return res.status(404).send({ status: false, message: "Cart is empty... First add Product to Cart." })
         cart.totalQuantity = cart.items.map(x => x.quantity).reduce((x, y) => x + y) // map giving array of quantity
 
-        cart.totalQuantity = cart.items.map(x => x.quantity).reduce((x, y) => x + y)
-        const orderCreated = await orderModel.create(cart)
-        let order =JSON.parse(JSON.stringify(orderCreated))
-        delete order.isDeleted
-        delete order.__v
-        res.status(201).send({ status: true, message: "order created successfully", data: order })
+        let order = await orderModel.create(cart)
+
+        //==getting only required keys and sending in response==//
+        let result ={
+        _id : order._id,
+        userId : order.userId,
+        items : order.items,
+        totalPrice : order.totalPrice,
+        totalItems : order.totalItems,
+        totalQuantity : order.totalQuantity,
+        cancellable : order.cancellable,
+        status : order.status,
+        createdAt : order.createdAt,
+        updatedAt : order.updatedAt
+    }
+        res.status(201).send({ status: true, message: "order created successfully", data: result })
 
         await cartModel.findOneAndUpdate({ userId: userId }, { $set: { items: [], totalItems: 0, totalPrice: 0 } }, { new: true })
 

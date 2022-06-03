@@ -86,13 +86,20 @@ const getProduct = async function (req, res) {
                 if (fTitle.length == 0) { filterQuery.title = name }
                 filterQuery.title = { $in: fTitle }
             }
+
+            if (priceSort){
+                if(priceSort != 1 && priceSort != -1 ) return res.status(400).send({ status: false, message: "priceSort should be among 1 and -1." })
+            }
+
             if (priceGreaterThan && priceLessThan) { filterQuery.price = { $gt: priceGreaterThan, $lt: priceLessThan } }
             if (priceGreaterThan && !priceLessThan) { filterQuery.price = { $gt: priceGreaterThan } }
             if (priceLessThan && !priceGreaterThan) { filterQuery.price = { $lt: priceLessThan } }
         }
 
         const findProducts = await productModel.find(filterQuery).sort({ price: priceSort })
-        if (!findProducts) return res.status(404).send({ status: false, message: "products not found or may be deleted" })
+
+        if (findProducts.length == 0) return res.status(404).send({ status: false, message: "products not found or may be deleted" })
+
         return res.status(200).send({ status: true, count: findProducts.length, message: "products details", data: findProducts })
     }
     catch (err) {
