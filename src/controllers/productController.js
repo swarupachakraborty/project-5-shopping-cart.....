@@ -71,10 +71,10 @@ const getProduct = async function (req, res){
         const query = req.query
     //==No filter:sending product list==//
     if(!query){
-        let GetRecod = await productModel.find({ isDeleted: false })
-        if (GetRecod.length == 0) return res.status(404).send({ status: false, message: "product not found" }) 
+        let GetRecord = await productModel.find({ isDeleted: false })
+        if (GetRecord.length == 0) return res.status(404).send({ status: false, message: "product not found" }) 
 
-        if (Object.keys(query).length === 0) return res.status(200).send({ status: true, message: 'Products list', data: GetRecod })}
+        if (Object.keys(query).length === 0) return res.status(200).send({ status: true, message: 'Products list', data: GetRecord })}
 
     //==with filter==//
         let { priceSort , name, size, priceGreaterThan, priceLessThan } = query
@@ -86,16 +86,15 @@ const getProduct = async function (req, res){
         }
 
         if (isValid(priceSort )){
-            if(priceSort == "ascending") priceSort = 1
-            if(priceSort == "decending") priceSort = -1
+            if(priceSort != 1 && priceSort != -1 ) return res.status(400).send({ status: false, message: "priceSort should be among 1 and -1." })
         }
         
         if(isValid(priceGreaterThan)){
-            filter.price = {$gte:priceGreaterThan}
+            filter.price = {$gt:priceGreaterThan}
         }
         
         if(isValid(priceLessThan)){
-            filter.price = { $lte:priceLessThan }
+            filter.price = { $lt:priceLessThan }
         }
         
         if(isValid(size)){
@@ -105,11 +104,12 @@ const getProduct = async function (req, res){
    
     //==if price range given, checking and sending details==//  
         if(priceGreaterThan && priceLessThan){
+
         const product = await productModel.find({isDeleted: false,
         $or: [
         { title:  filter.title },
         { availableSizes :  filter.availableSizes },
-        {price:{$gte:priceGreaterThan,$lte:priceLessThan}}
+        {price:{$gt:priceGreaterThan,$lt:priceLessThan}}
         ]}).sort({price : priceSort})
 
         if (product.length === 0) {
